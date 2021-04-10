@@ -1,0 +1,23 @@
+name: clang-format Check
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  formatting-check:
+    name: Formatting Check
+    strategy:
+      matrix:
+        path:
+          - check: 'known_fail'
+            exclude: 'capi'
+          - check: 'known_pass'
+            exclude: 'capi'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run clang-format style check for C/C++ programs.
+      uses: micahsnyder/clang-format-action@exclude-regex
+      with:
+        check-path: ${{ matrix.path['check'] }}
+        clang-format-version: 11
+        exclude-regex: ${{ matrix.path['exclude'] }}
